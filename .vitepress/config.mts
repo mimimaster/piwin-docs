@@ -2,20 +2,32 @@ import { defineConfig } from 'vitepress';
 
 export default defineConfig({
   lang: 'zh-CN',
-  title: 'Piwin Docs',
-  description: '私有化 AI 智能体工作台与生产力生态',
+  title: 'Piwin · 砚',
+  description: '面向个人的智能编程工作台 — 极其方便的配置方式，模型、视觉委托、Web 搜索随心掌控',
   cleanUrls: true,
   lastUpdated: true,
+  ignoreDeadLinks: true,
+
+  // 对外唯一域名是 docs.piwinwin.com：逐页输出 canonical / og:url，
+  // 避免旧别名（docs.planora.chat）在迁移后被当作重复内容收录。
+  transformHead({ pageData }) {
+    const routePath = pageData.relativePath.replace(/index\.md$/, '').replace(/\.md$/, '');
+    const canonicalUrl = `https://docs.piwinwin.com/${routePath}`;
+    return [
+      ['link', { rel: 'canonical', href: canonicalUrl }],
+      ['meta', { property: 'og:url', content: canonicalUrl }],
+    ];
+  },
 
   head: [
-    ['link', { rel: 'icon', type: 'image/png', href: '/logo.png' }],
+    ['link', { rel: 'icon', type: 'image/png', href: '/favicon.png' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
     ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
     ['link', { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Serif+SC:wght@500;600;700&display=swap' }],
     ['meta', { name: 'theme-color', content: '#c6412a' }],
     ['meta', { name: 'og:type', content: 'website' }],
-    ['meta', { name: 'og:title', content: 'Piwin Docs · 砚 - 私有化 AI 智能体工作台指引' }],
-    ['meta', { name: 'og:description', content: '遵循 Inkstone（砚）文人美学的私有化 AI 智能体工作台配置指南' }],
+    ['meta', { name: 'og:title', content: 'Piwin · 砚 — 面向个人的智能编程工作台' }],
+    ['meta', { name: 'og:description', content: '专为个人开发者打造：官方订阅一键授权，联网搜索即插即用，免费视觉委托跑腿，Devin 专属生态加持。' }],
   ],
 
   themeConfig: {
@@ -24,77 +36,77 @@ export default defineConfig({
 
     nav: [
       { text: '首页', link: '/' },
-      { text: 'Docs', link: '/docs/vision-models' },
+      { text: '快速起步', link: '/docs/getting-started' },
+      { text: '智能能力', link: '/docs/code-search' },
+      { text: '配置指南', link: '/docs/model-config' },
+      { text: '系统生态', link: '/docs/extensions' },
+      { text: '视觉画廊', link: '/docs/gallery' },
+      {
+        text: '更多',
+        items: [
+          { text: 'GitHub 仓库', link: 'https://github.com/mimimaster/piwin' },
+          { text: '提示词体系', link: '/docs/prompt-system' },
+          { text: '文档共建指引', link: '/docs/how-to-write-docs' },
+        ],
+      },
     ],
 
-    // 左侧多层级侧边栏配置
     sidebar: {
       '/docs/': [
         {
-          text: '🚀 起步入门',
+          text: '入门与使用',
           collapsed: false,
           items: [
-            { text: '快速起步概览', link: '/docs/getting-started' },
+            { text: '快速起步与配置概览', link: '/docs/getting-started' },
+            { text: '多端运行与开箱安装', link: '/docs/deployment' },
+          ],
+        },
+
+        {
+          text: '智能体核心能力',
+          collapsed: false,
+          items: [
+            { text: 'Code Search 代码拓扑检索', link: '/docs/code-search' },
+            { text: '子代理协同 (Ultra & Fusion)', link: '/docs/subagent-orchestration' },
+            { text: '全双工实时语音 Live', link: '/docs/realtime-voice' },
+            { text: 'Artifact 实时渲染与画布', link: '/docs/artifact-rendering' },
           ],
         },
         {
-          text: '🧠 模型与推理配置',
+          text: '配置指南（模型 · 搜索 · 委托）',
           collapsed: false,
           items: [
-            // 一级父文档 / 目录
-            {
-              text: '视觉模型 (Vision Models)',
-              collapsed: false,
-              items: [
-                { text: '视觉模型与委托完整指引', link: '/docs/vision-models' },
-                { text: '视觉委托原理与配置', link: '/docs/vision-models#vision-delegation' },
-                { text: '免费模型渠道指路 (Google/硅基等)', link: '/docs/vision-models#free-models' },
-                { text: '客户端配置与测试', link: '/docs/vision-models#step-by-step' },
-              ],
-            },
-            {
-              text: '主力推理模型',
-              collapsed: true,
-              items: [
-                { text: 'Claude / DeepSeek / GPT 配置', link: '/docs/getting-started' },
-              ],
-            },
+            { text: '模型与通道配置总览', link: '/docs/model-config' },
+            { text: '视觉模型（免费渠道与委托）', link: '/docs/vision-models' },
+            { text: 'Web 搜索与网络检索配置', link: '/docs/web-search' },
+            { text: '官方订阅 OAuth 一键登录', link: '/docs/oauth-login' },
+            { text: 'Devin OAuth 授权与获取', link: '/docs/token-acquisition' },
           ],
         },
         {
-          text: '🌐 网络与生态',
+          text: '系统、生态与安全',
           collapsed: false,
           items: [
-            {
-              text: 'Web 搜索指路',
-              collapsed: false,
-              items: [
-                { text: 'Web 搜索与社群资源汇总', link: '/docs/web-community' },
-                { text: 'Tavily 免费 1000 次 API Key', link: '/docs/web-community#web-search' },
-                { text: 'SearXNG 私有化自建', link: '/docs/web-community#web-search' },
-              ],
-            },
-            {
-              text: '社群与插件生态',
-              collapsed: true,
-              items: [
-                { text: 'MCP 插件与提示词资源', link: '/docs/web-community#community-resources' },
-              ],
-            },
+            { text: '扩展、Skill 与 MCP 生态', link: '/docs/extensions' },
+            { text: '权限管控与安全拦截', link: '/docs/permissions' },
+            { text: '知识库与多媒体资料库', link: '/docs/knowledge-and-media' },
+            { text: '会话管理、归档与用量统计', link: '/docs/session-and-stats' },
           ],
         },
         {
-          text: '🧩 智能体架构与提示词系统',
+          text: '视觉画廊与实景',
           collapsed: false,
           items: [
-            { text: '提示词工程与上下文设计体系', link: '/docs/prompt-system' },
+            { text: '实机体验与特性画廊', link: '/docs/gallery' },
           ],
         },
         {
-          text: '📝 文档创作与层级管理',
+          text: '进阶与共建',
           collapsed: false,
           items: [
-            { text: '如何添加父子多层级 Markdown', link: '/docs/how-to-write-docs' },
+            { text: '提示词与上下文设计体系', link: '/docs/prompt-system' },
+            { text: '精选社群与优质资源', link: '/docs/web-community' },
+            { text: '如何编写与扩充文档', link: '/docs/how-to-write-docs' },
           ],
         },
       ],
@@ -143,6 +155,10 @@ export default defineConfig({
       message: 'Released under the MIT License.',
       copyright: 'Copyright © 2024-present Piwin. All rights reserved.',
     },
+
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/mimimaster/piwin' },
+    ],
 
     darkModeSwitchLabel: '面（纸 / 墨）',
     lightModeSwitchTitle: '切换至纸面（浅色）',
