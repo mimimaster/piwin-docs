@@ -38,7 +38,7 @@ export default defineConfig({
       { text: '首页', link: '/' },
       { text: '下载', link: '/download' },
       { text: '快速起步', link: '/docs/getting-started' },
-      { text: '智能能力', link: '/docs/code-search' },
+      { text: '拓展站', link: 'https://extension.piwinwin.com', target: '_blank' },
       { text: '配置指南', link: '/docs/model-config' },
       { text: '系统生态', link: '/docs/extensions' },
       { text: '视觉画廊', link: '/docs/gallery' },
@@ -92,8 +92,10 @@ export default defineConfig({
           collapsed: false,
           items: [
             { text: '扩展、Skill 与 MCP 生态', link: '/docs/extensions' },
+            { text: 'Pi 扩展开发与 piwin 适配', link: '/docs/extension-development' },
             { text: 'Pi 扩展安装实战 (cc-safety-net)', link: '/docs/install-pi-extension' },
             { text: '权限管控与安全拦截', link: '/docs/permissions' },
+            { text: '多会话并发写入与乐观写锁', link: '/docs/workspace-concurrency' },
             { text: '知识库与多媒体资料库', link: '/docs/knowledge-and-media' },
             { text: '会话管理、归档与用量统计', link: '/docs/session-and-stats' },
           ],
@@ -158,7 +160,7 @@ export default defineConfig({
     },
 
     footer: {
-      message: 'Released under the MIT License. · 特别致谢 LINUX DO 社区',
+      message: 'Released under the MIT License.',
       copyright: 'Copyright © 2026-present Piwin. All rights reserved.',
     },
 
