@@ -206,7 +206,7 @@ export default defineConfig({
     },
 
     footer: {
-      message: 'Released under the MIT License.',
+      message: 'Released under the MIT License. · <a href="/privacy">隐私政策</a> · <a href="/en/privacy">Privacy Policy</a>',
       copyright: 'Copyright © 2026-present Piwin. All rights reserved.',
     },
 
