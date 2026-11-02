@@ -26,8 +26,8 @@
 
 1. 前往 **[全平台客户端下载中心](/download)** 或 **[GitHub Releases 页面](https://github.com/mimimaster/piwin/releases)**；
 2. 下载对应系统的安装包：
-   - macOS 用户：点击 **[下载 DMG 镜像](https://dl.piwinwin.com/piwinwin_0.0.0_aarch64.dmg?v=f4cf3d60)**（暂时只支持 M 系列芯片），双击拖入 Applications 文件夹；
-   - Windows 用户：点击 **[下载安装包 (.exe)](https://dl.piwinwin.com/piwinwin_0.0.0_x64-setup.exe?v=854f1af2)**，双击安装。
+   - macOS 用户：点击 **[下载 DMG 镜像](/download)**（暂时只支持 M 系列芯片），双击拖入 Applications 文件夹；
+   - Windows 用户：点击 **[下载安装包 (.exe)](/download)**，双击安装。
 
 ---
 
@@ -70,7 +70,7 @@ Tailscale 地址在家里和外面都能连，而且全程加密。
 ### 3.4 连不上时逐项检查
 
 - **是否在同一网络**：访客 Wi‑Fi、公司网络常开启「设备隔离」，设备之间无法互访，请改用 Tailscale；
-- **电脑是否在线**：电脑上的 Piwin 需要开着，电脑睡眠时手机也连不上；
+- **电脑是否在线**：电脑上的 Piwin 需要开着。Mac 版 Piwin 运行期间会阻止系统空闲睡眠（锁屏、关显示器不影响连接，可用 `pmset -g assertions` 查看）；但手动睡眠或合上笔记本盖子后，手机仍然连不上；
 - **设置页是否有报错**：例如「没有检测到局域网地址」（电脑没联网）或端口全部被占用；
 - **二维码是否失效**：重新打开设置页或点「刷新二维码」后再扫；
 - **系统权限**：检查 iPhone「设置 → 隐私与安全性 → 本地网络」中 Piwin 是否已开启。
