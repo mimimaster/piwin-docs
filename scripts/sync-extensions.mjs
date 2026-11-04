@@ -14,7 +14,9 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(fileURLToPath(new URL('.', import.meta.url)), '..');
 const sourceDir = resolve(root, '.ext-src/site');
-const targetDir = resolve(root, 'product/public/extensions');
+// VitePress publicDir 固定是 <srcDir>/public（本仓 srcDir 是仓库根），
+// 写到 product/public 不会进构建产物。
+const targetDir = resolve(root, 'public/extensions');
 
 if (!existsSync(sourceDir)) {
   console.warn(
