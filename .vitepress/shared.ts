@@ -91,7 +91,8 @@ export const COMMON_THEME_CONFIG = {
     },
   },
   footer: {
-    message: 'Released under the MIT License.',
+    message:
+      'Released under the MIT License. · <a href="https://docs.piwinwin.com/privacy">隐私政策</a> · <a href="https://docs.piwinwin.com/en/privacy">Privacy Policy</a>',
     copyright: 'Copyright © 2026-present Piwin. All rights reserved.',
   },
   socialLinks: [{ icon: 'github' as const, link: 'https://github.com/mimimaster/piwin' }],
