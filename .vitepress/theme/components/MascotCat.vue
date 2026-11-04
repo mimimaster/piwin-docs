@@ -17,7 +17,7 @@ const POSES: readonly PoseMeta[] = [
     id: 'idle',
     label: '待命',
     tag: 'READY · >_',
-    quote: '砚台已备好，等你发号施令。',
+    quote: '喵喵喵',
     frames: [
       '/mascot/pip-idle.webp',
       '/mascot/pip-idle-2.webp',
@@ -30,7 +30,7 @@ const POSES: readonly PoseMeta[] = [
     id: 'coding',
     label: '狂敲',
     tag: 'TOOL · EXEC',
-    quote: '双爪冒火星，正在独立 Worktree 里改代码…',
+    quote: '喵喵喵',
     frames: [
       '/mascot/pip-coding.webp',
       '/mascot/pip-coding-2.webp',
@@ -43,7 +43,7 @@ const POSES: readonly PoseMeta[] = [
     id: 'thinking',
     label: '推演',
     tag: 'THINKING · …?',
-    quote: '歪头推演架构边界，绝不乱改一行。',
+    quote: '喵喵喵',
     frames: [
       '/mascot/pip-thinking.webp',
       '/mascot/pip-thinking-2.webp',
@@ -55,7 +55,7 @@ const POSES: readonly PoseMeta[] = [
     id: 'done',
     label: '搞定',
     tag: 'VERIFIED · ✓',
-    quote: '测试全绿！击个掌，准备下载体验吧。',
+    quote: '喵喵喵',
     frames: [
       '/mascot/pip-done.webp',
       '/mascot/pip-done-2.webp',
@@ -68,7 +68,7 @@ const POSES: readonly PoseMeta[] = [
     id: 'alert',
     label: '拦截',
     tag: 'GATE · !',
-    quote: '炸毛警觉！高危指令已被权限引擎拦下。',
+    quote: '喵喵喵',
     frames: [
       '/mascot/pip-alert.webp',
       '/mascot/pip-alert-2.webp',
@@ -81,7 +81,7 @@ const POSES: readonly PoseMeta[] = [
     id: 'sleep',
     label: '打盹',
     tag: 'STANDBY · zZZ',
-    quote: '案头静悄悄，先团成一团咪一会儿…',
+    quote: '喵喵喵',
     frames: [
       '/mascot/pip-sleep.webp',
       '/mascot/pip-sleep-2.webp',
