@@ -8,7 +8,8 @@ interface PoseMeta {
   label: string;
   tag: string;
   quote: string;
-  src: string;
+  frames: readonly string[];
+  frameDurations: readonly number[];
 }
 
 const POSES: readonly PoseMeta[] = [
@@ -17,46 +18,86 @@ const POSES: readonly PoseMeta[] = [
     label: '待命',
     tag: 'READY · >_',
     quote: '砚台已备好，等你发号施令。',
-    src: '/mascot/pip-idle.webp',
+    frames: [
+      '/mascot/pip-idle.webp',
+      '/mascot/pip-idle-2.webp',
+      '/mascot/pip-idle-3.webp',
+      '/mascot/pip-idle-2.webp',
+    ],
+    frameDurations: [2200, 260, 900, 220],
   },
   {
     id: 'coding',
     label: '狂敲',
     tag: 'TOOL · EXEC',
     quote: '双爪冒火星，正在独立 Worktree 里改代码…',
-    src: '/mascot/pip-coding.webp',
+    frames: [
+      '/mascot/pip-coding.webp',
+      '/mascot/pip-coding-2.webp',
+      '/mascot/pip-coding-3.webp',
+      '/mascot/pip-coding-2.webp',
+    ],
+    frameDurations: [180, 160, 190, 150],
   },
   {
     id: 'thinking',
     label: '推演',
     tag: 'THINKING · …?',
     quote: '歪头推演架构边界，绝不乱改一行。',
-    src: '/mascot/pip-thinking.webp',
+    frames: [
+      '/mascot/pip-thinking.webp',
+      '/mascot/pip-thinking-2.webp',
+      '/mascot/pip-thinking-3.webp',
+    ],
+    frameDurations: [1300, 1100, 1400],
   },
   {
     id: 'done',
     label: '搞定',
     tag: 'VERIFIED · ✓',
     quote: '测试全绿！击个掌，准备下载体验吧。',
-    src: '/mascot/pip-done.webp',
+    frames: [
+      '/mascot/pip-done.webp',
+      '/mascot/pip-done-2.webp',
+      '/mascot/pip-done-3.webp',
+      '/mascot/pip-done.webp',
+    ],
+    frameDurations: [950, 420, 1100, 750],
   },
   {
     id: 'alert',
     label: '拦截',
     tag: 'GATE · !',
     quote: '炸毛警觉！高危指令已被权限引擎拦下。',
-    src: '/mascot/pip-alert.webp',
+    frames: [
+      '/mascot/pip-alert.webp',
+      '/mascot/pip-alert-2.webp',
+      '/mascot/pip-alert-3.webp',
+      '/mascot/pip-alert-2.webp',
+    ],
+    frameDurations: [420, 380, 480, 360],
   },
   {
     id: 'sleep',
     label: '打盹',
     tag: 'STANDBY · zZZ',
     quote: '案头静悄悄，先团成一团咪一会儿…',
-    src: '/mascot/pip-sleep.webp',
+    frames: [
+      '/mascot/pip-sleep.webp',
+      '/mascot/pip-sleep-2.webp',
+      '/mascot/pip-sleep-3.webp',
+      '/mascot/pip-sleep-2.webp',
+    ],
+    frameDurations: [1600, 1200, 1500, 1100],
   },
 ];
 
+const ALL_SPRITE_SRCS: readonly string[] = Array.from(
+  new Set(POSES.flatMap((pose) => pose.frames)),
+);
+
 const currentPose = ref<MascotPose>('idle');
+const frameIndex = ref<number>(0);
 const manualOverrideUntil = ref<number>(0);
 const panelOpen = ref<boolean>(false);
 const minimized = ref<boolean>(false);
@@ -67,8 +108,31 @@ const activeMeta = computed<PoseMeta>(
   () => POSES.find((item) => item.id === currentPose.value) ?? POSES[0]!,
 );
 
+const activeFrameSrc = computed<string>(() => {
+  const frames = activeMeta.value.frames;
+  return frames[frameIndex.value % frames.length] ?? frames[0]!;
+});
+
 let idleTimer: ReturnType<typeof setTimeout> | undefined;
 let hopTimer: ReturnType<typeof setTimeout> | undefined;
+let frameTimer: ReturnType<typeof setTimeout> | undefined;
+
+function scheduleNextFrame(): void {
+  if (frameTimer) clearTimeout(frameTimer);
+  if (
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ) {
+    return;
+  }
+  const durations = activeMeta.value.frameDurations;
+  const delay = durations[frameIndex.value % durations.length] ?? 600;
+  frameTimer = setTimeout(() => {
+    const total = activeMeta.value.frames.length;
+    frameIndex.value = (frameIndex.value + 1) % total;
+    scheduleNextFrame();
+  }, delay);
+}
 
 function triggerHop(): void {
   hop.value = false;
@@ -88,6 +152,8 @@ function setPose(pose: MascotPose, manual = false): void {
     manualOverrideUntil.value = Date.now() + 14_000;
   }
   if (changed) {
+    frameIndex.value = 0;
+    scheduleNextFrame();
     triggerHop();
   }
 }
@@ -146,6 +212,7 @@ function onUserActivity(): void {
 
 onMounted(() => {
   resetIdleSleepTimer();
+  scheduleNextFrame();
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('mousemove', onUserActivity, { passive: true });
   window.addEventListener('keydown', onUserActivity, { passive: true });
@@ -154,6 +221,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (idleTimer) clearTimeout(idleTimer);
   if (hopTimer) clearTimeout(hopTimer);
+  if (frameTimer) clearTimeout(frameTimer);
   window.removeEventListener('scroll', onScroll);
   window.removeEventListener('mousemove', onUserActivity);
   window.removeEventListener('keydown', onUserActivity);
@@ -219,12 +287,12 @@ onBeforeUnmount(() => {
     >
       <span class="mascot-pedestal" aria-hidden="true" />
       <img
-        v-for="item in POSES"
-        :key="item.id"
-        :src="item.src"
-        :alt="`看板猫 Pip - ${item.label}`"
+        v-for="src in ALL_SPRITE_SRCS"
+        :key="src"
+        :src="src"
+        :alt="`看板猫 Pip - ${activeMeta.label}`"
         class="mascot-sprite"
-        :class="{ active: item.id === currentPose }"
+        :class="{ active: src === activeFrameSrc }"
         width="88"
         height="88"
         decoding="async"
@@ -397,22 +465,22 @@ onBeforeUnmount(() => {
   display: block;
 }
 
-/* 不同状态的像素风微动画 */
+/* 逐帧像素动画为主，CSS 仅做极轻微的呼吸衬托 */
 .pose-idle .mascot-sprite.active,
 .pose-thinking .mascot-sprite.active {
-  animation: pip-breathe 2.6s steps(2, end) infinite;
+  animation: pip-breathe 2.8s steps(2, end) infinite;
 }
 
 .pose-coding .mascot-sprite.active {
-  animation: pip-type 0.26s steps(2, end) infinite;
+  animation: pip-type 0.34s steps(2, end) infinite;
 }
 
 .pose-done .mascot-sprite.active {
-  animation: pip-cheer 0.9s steps(2, end) infinite;
+  animation: pip-cheer 1.2s steps(2, end) infinite;
 }
 
 .pose-alert .mascot-sprite.active {
-  animation: pip-alert 0.45s steps(2, end) infinite;
+  animation: pip-alert 0.5s steps(2, end) infinite;
 }
 
 .pose-sleep .mascot-sprite.active {
@@ -468,17 +536,17 @@ onBeforeUnmount(() => {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
   }
 }
 
 @keyframes pip-type {
   0%,
   100% {
-    transform: translateY(0) rotate(-1deg);
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(2px) rotate(1deg);
+    transform: translateY(1px);
   }
 }
 
@@ -488,7 +556,7 @@ onBeforeUnmount(() => {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
   }
 }
 
@@ -498,7 +566,7 @@ onBeforeUnmount(() => {
     transform: translateX(0);
   }
   50% {
-    transform: translateX(-2px) translateY(-2px);
+    transform: translateX(-1px);
   }
 }
 
